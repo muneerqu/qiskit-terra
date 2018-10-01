@@ -15,6 +15,7 @@ import time
 import re
 import numpy as np
 from scipy import linalg
+from qiskit.tools.visualization import VisualizationError
 if ('ipykernel' in sys.modules) and ('spyder' not in sys.modules):
     try:
         from IPython.core.display import display, HTML
@@ -170,7 +171,8 @@ def bit_string_index(text):
     """Return the index of a string of 0s and 1s."""
     n = len(text)
     k = text.count("1")
-    assert text.count("0") == n - k, "s must be a string of 0 and 1"
+    if text.count("0") != n - k:
+        raise VisualizationError("s must be a string of 0 and 1")
     ones = [pos for pos, char in enumerate(text) if char == "1"]
     return lex_index(n, k, ones)
 
@@ -187,7 +189,8 @@ def lex_index(n, k, lst):
         int: returns int index for lex order
 
     """
-    assert len(lst) == k, "list should have length k"
+    if len(lst) != k:
+        raise VisualizationError("list should have length k")
     comb = list(map(lambda x: n - 1 - x, lst))
     dualm = sum([n_choose_k(comb[k - 1 - i], i + 1) for i in range(k)])
     return int(dualm)

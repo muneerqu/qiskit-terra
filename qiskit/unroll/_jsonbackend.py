@@ -95,7 +95,8 @@ class JsonBackend(UnrollerBackend):
         name = name of the register
         sz = size of the register
         """
-        assert size >= 0, "invalid qreg size"
+        if size < 0:
+            raise BackendError("invalid qreg size")
 
         for j in range(size):
             self._qubit_order.append([name, j])
@@ -110,7 +111,8 @@ class JsonBackend(UnrollerBackend):
         name = name of the register
         sz = size of the register
         """
-        assert size >= 0, "invalid creg size"
+        if size < 0:
+            raise BackendError("invalid creg size")
         self._cbit_order.append([name, size])
         for j in range(size):
             self._cbit_order_internal[(name, j)] = self._number_of_cbits + j

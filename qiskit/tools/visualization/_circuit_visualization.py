@@ -741,7 +741,8 @@ class QCircuitImage(object):
                 max_column_width[columns] = max(arg_str_len,
                                                 max_column_width[columns])
             elif op['name'] == "measure":
-                assert len(op['clbits']) == 1 and len(op['qubits']) == 1
+                if len(op['clbits']) != 1 and len(op['qubits']) != 1:
+                    raise QISKitError("classical bits are not equalt to qubits")
                 if 'conditional' in op:
                     raise QISKitError('conditional measures currently not supported.')
                 qname, qindex = self.total_2_register_index(
@@ -788,7 +789,7 @@ class QCircuitImage(object):
             elif op['name'] == "barrier":
                 pass
             else:
-                assert False, "bad node data"
+                raise QISKitError("bad node data")
         # every 3 characters is roughly one extra 'unit' of width in the cell
         # the gate name is 1 extra 'unit'
         # the qubit/cbit labels plus initial states is 2 more
@@ -1228,12 +1229,11 @@ class QCircuitImage(object):
                                 "\\qswap \\qwx[" + str(pos_2 - pos_3) + "]"
 
             elif op["name"] == "measure":
-                assert len(op['clbits']) == 1 and \
-                    len(op['qubits']) == 1 and \
-                    'params' not in op, "bad operation record"
+                if len(op['clbits']) != 1 and len(op['qubits']) != 1 and 'params' in op:
+                    raise QISKitError("bad operation record")
 
                 if 'conditional' in op:
-                    assert False, "If controlled measures currently not supported."
+                    raise QISKitError("If controlled measures currently not supported.")
                 qname, qindex = self.total_2_register_index(
                     op['qubits'][0], self.qregs)
                 cname, cindex = self.total_2_register_index(
@@ -1283,7 +1283,7 @@ class QCircuitImage(object):
                 span = len(op['qubits']) - 1
                 self._latex[start][columns] += " \\barrier{" + str(span) + "}"
             else:
-                assert False, "bad node data"
+                raise QISKitError("bad node data")
 
     def _ffs(self, mask):
         """Find index of first set bit.
@@ -1477,11 +1477,13 @@ class MatplotlibDrawer:
         for e in header['clbit_labels']:
             for i in range(e[1]):
                 self._creg.append(Register(name=e[0], index=i))
-        assert len(self._creg) == header['number_of_clbits']
+        if len(self._creg) != header['number_of_clbits']:
+            raise QISKitError("inconsistent number of classical bits")
         self._qreg = []
         for e in header['qubit_labels']:
             self._qreg.append(Register(name=e[0], index=e[1]))
-        assert len(self._qreg) == header['number_of_qubits']
+        if len(self._qreg) != header['number_of_qubits']:
+            raise QISKitError("inconsistent number of qubits")
 
     @property
     def ast(self):

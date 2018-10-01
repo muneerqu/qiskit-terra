@@ -61,7 +61,8 @@ class PrinterBackend(UnrollerBackend):
         name = name of the register
         sz = size of the register
         """
-        assert size >= 0, "invalid qreg size"
+        if size < 0:
+            raise BackendError("invalid qreg size")
         print("qreg %s[%d];" % (name, size))
 
     def new_creg(self, name, size):
