@@ -742,7 +742,7 @@ class QCircuitImage(object):
                                                 max_column_width[columns])
             elif op['name'] == "measure":
                 if len(op['clbits']) != 1 and len(op['qubits']) != 1:
-                    raise QISKitError("classical bits are not equalt to qubits")
+                    raise QISKitError("classical bits are not equal to qubits")
                 if 'conditional' in op:
                     raise QISKitError('conditional measures currently not supported.')
                 qname, qindex = self.total_2_register_index(

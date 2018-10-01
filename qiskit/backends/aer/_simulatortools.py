@@ -48,7 +48,7 @@ def index2(b1, i1, b2, i2, k):
     and b2 as the i2th bit
     """
     if i1 == i2:
-        raise QISKitError("internal error, id_tuple_list")
+        raise QISKitError("both bits have the same target position")
 
     if i1 > i2:
         # insert as (i1-1)th bit, will be shifted left 1 by next line

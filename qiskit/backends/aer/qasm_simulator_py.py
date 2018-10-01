@@ -142,7 +142,7 @@ class QasmSimulatorPy(BaseBackend):
         and b2 as the i2th bit
         """
         if i1 == i2:
-            raise SimulatorError("internal error, id_tuple_list")
+            raise SimulatorError("both bits have the same target position")
 
         if i1 > i2:
             # insert as (i1-1)th bit, will be shifted left 1 by next line
